@@ -1,0 +1,25 @@
+{
+  "name": "fluidangle-contacts-app",
+  "version": "1.0.0",
+  "description": "Contacts API for FluidAngle Technical Challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pretest": "eslint --ignore-path .gitignore ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ccmelas/fluidangle.git"
+  },
+  "author": "Chinedum Chiemela",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ccmelas/fluidangle/issues"
+  },
+  "homepage": "https://github.com/ccmelas/fluidangle#readme",
+  "devDependencies": {
+    "eslint": "^5.12.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
+  }
+}
