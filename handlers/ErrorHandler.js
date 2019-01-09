@@ -29,9 +29,18 @@ class ErrorHandler {
     res.status(err.status || 500);
     res.json({
       message: err.message,
-      error: {}
+      error: err.errors || err
     });
     next();
+  }
+
+  /**
+   * Wrapper for catching async/await errors
+   * @param {function} fn
+   * @returns {function} [Composed function with error handler attached]
+   */
+  static catchErrors(fn) {
+    return (req, res, next) => fn(req, res, next).catch(next);
   }
 }
 
