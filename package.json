@@ -4,8 +4,9 @@
   "description": "Contacts API for FluidAngle Technical Challenge",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha test",
-    "pretest": "eslint --ignore-path .gitignore ."
+    "test": "./node_modules/mocha/bin/mocha test/*",
+    "pretest": "eslint --ignore-path .gitignore .",
+    "start": "./node_modules/.bin/nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,9 @@
   },
   "homepage": "https://github.com/ccmelas/fluidangle#readme",
   "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-http": "^4.2.1",
     "eslint": "^5.12.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",

@@ -18,10 +18,15 @@ class AuthController {
    * Logs in a new user
    * @param {object} req
    * @param {object} res
-   * @returns {undefined} [Returns nothing]
+   * @param {function} next
+   * @returns {undefined | function } [Returns nothing or next]
    */
-  static async login(req, res) {
-    const user = await User.findOne({ username: req.body.username });
+  static async login(req, res, next) {
+    const user = await User.findOne({ where: { username: req.body.username } });
+
+    if (!user) {
+      return next({ status: 401, message: 'Unauthorized' });
+    }
 
     await user.comparePassword(req.body.password);
 

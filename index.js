@@ -15,3 +15,5 @@ new DB().connect().then(() => {
   // Start the server on successful DB connection
   app.listen(app.get('port'));
 });
+
+module.exports = app;
