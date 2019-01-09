@@ -13,7 +13,5 @@ app.set('port', process.env.PORT || 3000);
 // Connect to the database
 new DB().connect().then(() => {
   // Start the server on successful DB connection
-  const server = app.listen(app.get('port'), () => {
-    console.log(`Express running → PORT ${server.address().port}`);
-  });
+  app.listen(app.get('port'));
 });

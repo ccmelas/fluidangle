@@ -10,7 +10,6 @@ class DB {
   */
   async connect() {
     await db.sequelize.sync();
-    console.log('Connected');
     return this;
   }
 }
