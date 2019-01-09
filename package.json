@@ -26,6 +26,7 @@
     "sequelize-cli": "^5.4.0"
   },
   "dependencies": {
+    "bcrypt": "^3.0.3",
     "body-parser": "^1.18.3",
     "dotenv": "^6.2.0",
     "es6-promisify": "^6.0.1",
