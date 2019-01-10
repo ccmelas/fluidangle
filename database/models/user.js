@@ -55,8 +55,12 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
 
-  User.associate = () => {
+  User.associate = (models) => {
     // associations can be defined here
+    User.hasMany(models.Contact, {
+      foreignKey: 'user_id',
+      as: 'contacts'
+    });
   };
 
   User.beforeSave(async (user) => {
