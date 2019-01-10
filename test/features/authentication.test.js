@@ -18,7 +18,7 @@ const user = {
 describe('Authentication', () => {
   beforeEach(async () => {
     // Before each test we empty the users table
-    await User.destroy({ truncate: true });
+    await User.destroy({ truncate: { cascade: true } });
   });
 
   /** test user registration */

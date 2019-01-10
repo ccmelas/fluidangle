@@ -23,11 +23,18 @@ class ContactController {
    * @returns { undefined } [Returns nothing]
    */
   static async update(req, res) {
-    const contact = await Contact.update(
+    const update = await Contact.update(
       req.body,
       { where: { user_id: req.user.id, id: req.params.contact_id }, returning: true }
     );
-    res.json({ contact: contact[1][0] });
+
+    const contact = update[1][0];
+
+    if (!contact) {
+      res.status(404);
+    }
+
+    res.json({ contact });
   }
 
   /**
@@ -62,6 +69,8 @@ class ContactController {
     const contact = await Contact.findOne({
       where: { user_id: req.user.id, id: req.params.contact_id }
     });
+
+    if (!contact) res.status('404');
     res.json({ contact });
   }
 
@@ -72,11 +81,18 @@ class ContactController {
    * @returns { undefined } [Returns nothing]
    */
   static async star(req, res) {
-    const contact = await Contact.update(
+    const update = await Contact.update(
       { starred: true },
       { where: { user_id: req.user.id, id: req.params.contact_id }, returning: true }
     );
-    res.json({ contact: contact[1][0] });
+
+    const contact = update[1][0];
+
+    if (!contact) {
+      res.status(404);
+    }
+
+    res.json({ contact });
   }
 
   /**
@@ -86,11 +102,18 @@ class ContactController {
    * @returns { undefined } [Returns nothing]
    */
   static async unstar(req, res) {
-    const contact = await Contact.update(
+    const update = await Contact.update(
       { starred: false },
       { where: { user_id: req.user.id, id: req.params.contact_id }, returning: true }
     );
-    res.json({ contact: contact[1][0] });
+
+    const contact = update[1][0];
+
+    if (!contact) {
+      res.status(404);
+    }
+
+    res.json({ contact });
   }
 
   /**
@@ -108,7 +131,7 @@ class ContactController {
       return res.json({ message: 'Contact deleted successfully' });
     }
 
-    return res.json({ message: 'Contact could not be deleted or does not exist' });
+    return res.status(404).json({ message: 'Contact could not be deleted or does not exist' });
   }
 }
 
