@@ -1,6 +1,7 @@
 const express = require('express');
 const AuthController = require('../controllers/AuthController');
 const ContactController = require('../controllers/ContactController');
+const PasswordResetController = require('../controllers/PasswordResetController');
 const ErrorHandler = require('../handlers/ErrorHandler');
 const PassportHandler = require('../handlers/PassportHandler');
 const BlacklistedTokensMiddleware = require('../handlers/BlacklistedTokensMiddleware');
@@ -10,6 +11,13 @@ const router = express.Router();
 router.post('/register', ErrorHandler.catchErrors(AuthController.register));
 router.post('/login', ErrorHandler.catchErrors(AuthController.login));
 router.get('/logout', PassportHandler.middleware(), AuthController.logout);
+router.post('/password-forgot', ErrorHandler.catchErrors(PasswordResetController.forgot));
+router.get('/password-reset/:token',
+  PasswordResetController.getResetForm);
+router.post('/password-reset/:token',
+  PasswordResetController.confirmedPasswords,
+  ErrorHandler.catchErrors(PasswordResetController.reset));
+
 
 router.get('/me',
   BlacklistedTokensMiddleware.checkToken,

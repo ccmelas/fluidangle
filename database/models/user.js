@@ -53,6 +53,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    resetPasswordToken: {
+      type: DataTypes.STRING
+    },
+    resetPasswordExpires: {
+      type: DataTypes.DATE
+    },
   }, {});
 
   User.associate = (models) => {
