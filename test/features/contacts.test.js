@@ -50,10 +50,10 @@ describe('Contact Management', () => {
     token = user.generateJWT();
   });
 
-  describe('POST /api/v1/contacts', () => {
+  describe('POST /api/contacts', () => {
     it('should successfully create a new contact', (done) => {
       chai.request(app)
-        .post('/api/v1/contacts')
+        .post('/api/contacts')
         .set('Authorization', `Bearer ${token}`)
         .send(contactData)
         .end((err, res) => {
@@ -67,7 +67,7 @@ describe('Contact Management', () => {
     it('should not create a new contact with invalid email supplied', (done) => {
       contactData.email = 'inavlid-email';
       chai.request(app)
-        .post('/api/v1/contacts')
+        .post('/api/contacts')
         .set('Authorization', `Bearer ${token}`)
         .send(contactData)
         .end((err, res) => {
@@ -77,12 +77,12 @@ describe('Contact Management', () => {
     });
   });
 
-  describe('GET /api/v1/contacts', () => {
+  describe('GET /api/contacts', () => {
     it('should return a users contacts', (done) => {
       contactData.user_id = user.id;
       Contact.create(contactData).then((contact) => {
         chai.request(app)
-          .get('/api/v1/contacts')
+          .get('/api/contacts')
           .set('Authorization', `Bearer ${token}`)
           .end((err, res) => {
             res.should.have.status(200);
@@ -98,7 +98,7 @@ describe('Contact Management', () => {
       contactData.user_id = otherUser.id;
       Contact.create(contactData).then(() => {
         chai.request(app)
-          .get('/api/v1/contacts')
+          .get('/api/contacts')
           .set('Authorization', `Bearer ${token}`)
           .end((err, res) => {
             res.should.have.status(200);
@@ -110,12 +110,12 @@ describe('Contact Management', () => {
     });
   });
 
-  describe('GET /api/v1/contacts/:contact_id', () => {
+  describe('GET /api/contacts/:contact_id', () => {
     it('should return a user\'s single contact', (done) => {
       contactData.user_id = user.id;
       Contact.create(contactData).then((contact) => {
         chai.request(app)
-          .get(`/api/v1/contacts/${contact.id}`)
+          .get(`/api/contacts/${contact.id}`)
           .set('Authorization', `Bearer ${token}`)
           .end((err, res) => {
             res.should.have.status(200);
@@ -130,7 +130,7 @@ describe('Contact Management', () => {
       contactData.user_id = otherUser.id;
       Contact.create(contactData).then((contact) => {
         chai.request(app)
-          .get(`/api/v1/contacts/${contact.id}`)
+          .get(`/api/contacts/${contact.id}`)
           .set('Authorization', `Bearer ${token}`)
           .end((err, res) => {
             res.should.have.status(404);
@@ -141,12 +141,12 @@ describe('Contact Management', () => {
     });
   });
 
-  describe('PATCH /api/v1/contacts/:contact_id', () => {
+  describe('PATCH /api/contacts/:contact_id', () => {
     it('should update a user\'s single contact', (done) => {
       const update = { name: 'Updated Name' };
       createContact(user.id).then((contact) => {
         chai.request(app)
-          .patch(`/api/v1/contacts/${contact.id}`)
+          .patch(`/api/contacts/${contact.id}`)
           .set('Authorization', `Bearer ${token}`)
           .send(update)
           .end((err, res) => {
@@ -161,7 +161,7 @@ describe('Contact Management', () => {
       const update = { name: 'Updated Name' };
       createContact(otherUser.id).then((contact) => {
         chai.request(app)
-          .patch(`/api/v1/contacts/${contact.id}`)
+          .patch(`/api/contacts/${contact.id}`)
           .set('Authorization', `Bearer ${token}`)
           .send(update)
           .end((err, res) => {
@@ -172,11 +172,11 @@ describe('Contact Management', () => {
     });
   });
 
-  describe('PATCH /api/v1/contacts/:contact_id/star', () => {
+  describe('PATCH /api/contacts/:contact_id/star', () => {
     it('should star a user\'s single contact', (done) => {
       createContact(user.id).then((contact) => {
         chai.request(app)
-          .patch(`/api/v1/contacts/${contact.id}/star`)
+          .patch(`/api/contacts/${contact.id}/star`)
           .set('Authorization', `Bearer ${token}`)
           .end((err, res) => {
             res.should.have.status(200);
@@ -189,7 +189,7 @@ describe('Contact Management', () => {
     it('should not star another user\'s single contact', (done) => {
       createContact(otherUser.id).then((contact) => {
         chai.request(app)
-          .patch(`/api/v1/contacts/${contact.id}/star`)
+          .patch(`/api/contacts/${contact.id}/star`)
           .set('Authorization', `Bearer ${token}`)
           .end((err, res) => {
             res.should.have.status(404);
@@ -199,11 +199,11 @@ describe('Contact Management', () => {
     });
   });
 
-  describe('PATCH /api/v1/contacts/:contact_id/unstar', () => {
+  describe('PATCH /api/contacts/:contact_id/unstar', () => {
     it('should unstar a user\'s single contact', (done) => {
       createContact(user.id, true).then((contact) => {
         chai.request(app)
-          .patch(`/api/v1/contacts/${contact.id}/unstar`)
+          .patch(`/api/contacts/${contact.id}/unstar`)
           .set('Authorization', `Bearer ${token}`)
           .end((err, res) => {
             res.should.have.status(200);
@@ -216,7 +216,7 @@ describe('Contact Management', () => {
     it('should not unstar another user\'s single contact', (done) => {
       createContact(otherUser.id, true).then((contact) => {
         chai.request(app)
-          .patch(`/api/v1/contacts/${contact.id}/unstar`)
+          .patch(`/api/contacts/${contact.id}/unstar`)
           .set('Authorization', `Bearer ${token}`)
           .end((err, res) => {
             res.should.have.status(404);
@@ -226,7 +226,7 @@ describe('Contact Management', () => {
     });
   });
 
-  describe('GET /api/v1/contacts/starred', () => {
+  describe('GET /api/contacts/starred', () => {
     it('should return a users starred contacts ', (done) => {
       const userStarredContactPromise = createContact(user.id, true);
       const userUnstarredContactPromise = createContact(user.id);
@@ -234,7 +234,7 @@ describe('Contact Management', () => {
       Promise.all([userStarredContactPromise, userUnstarredContactPromise])
         .then(([starredContact, unstarredContact]) => {
           chai.request(app)
-            .get('/api/v1/contacts/starred')
+            .get('/api/contacts/starred')
             .set('Authorization', `Bearer ${token}`)
             .end((err, res) => {
               res.should.have.status(200);
@@ -247,11 +247,11 @@ describe('Contact Management', () => {
     });
   });
 
-  describe('DELETE /api/v1/contacts/:contact_id', () => {
+  describe('DELETE /api/contacts/:contact_id', () => {
     it('should delete a user\'s single contact', (done) => {
       createContact(user.id, true).then((contact) => {
         chai.request(app)
-          .delete(`/api/v1/contacts/${contact.id}`)
+          .delete(`/api/contacts/${contact.id}`)
           .set('Authorization', `Bearer ${token}`)
           .end((err, res) => {
             res.should.have.status(200);
@@ -263,7 +263,7 @@ describe('Contact Management', () => {
     it('should not delete another user\'s single contact', (done) => {
       createContact(otherUser.id, true).then((contact) => {
         chai.request(app)
-          .delete(`/api/v1/contacts/${contact.id}`)
+          .delete(`/api/contacts/${contact.id}`)
           .set('Authorization', `Bearer ${token}`)
           .end((err, res) => {
             res.should.have.status(404);

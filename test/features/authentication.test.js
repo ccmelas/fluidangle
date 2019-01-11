@@ -23,10 +23,10 @@ describe('Authentication', () => {
   });
 
   /** test user registration */
-  describe('POST /api/v1/register', () => {
+  describe('POST /api/register', () => {
     it('should successfully register a new user', (done) => {
       chai.request(app)
-        .post('/api/v1/register')
+        .post('/api/register')
         .send(user)
         .end((err, res) => {
           res.should.have.status(200);
@@ -39,7 +39,7 @@ describe('Authentication', () => {
     it('should not register an existing user user', (done) => {
       User.create(user).then(() => {
         chai.request(app)
-          .post('/api/v1/register')
+          .post('/api/register')
           .send(user)
           .end((err, res) => {
             res.should.have.status(500);
@@ -50,11 +50,11 @@ describe('Authentication', () => {
   });
 
   /** test user login */
-  describe('POST /api/v1/login', () => {
+  describe('POST /api/login', () => {
     it('should login a user with the correct credentials', (done) => {
       User.create(user).then(() => {
         chai.request(app)
-          .post('/api/v1/login')
+          .post('/api/login')
           .send(user)
           .end((err, res) => {
             res.should.have.status(200);
@@ -68,7 +68,7 @@ describe('Authentication', () => {
     it('should not login a user with an incorrect username', (done) => {
       User.create(user).then(() => {
         chai.request(app)
-          .post('/api/v1/login')
+          .post('/api/login')
           .send({ username: 'invalid', password: user.password })
           .end((err, res) => {
             res.should.have.status(401);
@@ -80,7 +80,7 @@ describe('Authentication', () => {
     it('should not login a user with an incorrect password', (done) => {
       User.create(user).then(() => {
         chai.request(app)
-          .post('/api/v1/login')
+          .post('/api/login')
           .send({ username: user.email, password: 'invalid' })
           .end((err, res) => {
             res.should.have.status(401);
@@ -91,13 +91,13 @@ describe('Authentication', () => {
   });
 
   /** test protected profile route access */
-  describe('POST /api/v1/me', () => {
+  describe('POST /api/me', () => {
     it('should allow a logged in user access to profile', (done) => {
       User.create(user).then((newUser) => {
         const token = newUser.generateJWT();
 
         chai.request(app)
-          .get('/api/v1/me')
+          .get('/api/me')
           .set('Authorization', `Bearer ${token}`)
           .end((err, res) => {
             res.should.have.status(200);
@@ -113,7 +113,7 @@ describe('Authentication', () => {
         const token = 'invalid-token';
 
         chai.request(app)
-          .get('/api/v1/me')
+          .get('/api/me')
           .set('Authorization', `Bearer ${token}`)
           .end((err, res) => {
             res.should.have.status(401);
@@ -123,17 +123,17 @@ describe('Authentication', () => {
     });
   });
 
-  describe('GET /api/v1/logout', () => {
+  describe('GET /api/logout', () => {
     it('should logout a user', (done) => {
       User.create(user).then((newUser) => {
         const token = newUser.generateJWT();
 
         const requester = chai.request(app).keepOpen();
 
-        const logoutRequest = requester.get('/api/v1/logout')
+        const logoutRequest = requester.get('/api/logout')
           .set('Authorization', `Bearer ${token}`);
 
-        const authRouteRequest = requester.get('/api/v1/me')
+        const authRouteRequest = requester.get('/api/me')
           .set('Authorization', `Bearer ${token}`);
 
         logoutRequest.then((logoutResponse) => {
