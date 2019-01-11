@@ -23,7 +23,7 @@ class PasswordResetController {
 
       await user.save();
 
-      const resetURL = `http://${req.headers.host}/api/v1/password-reset/${user.resetPasswordToken}`;
+      const resetURL = `http://${req.headers.host}/api/password-reset/${user.resetPasswordToken}`;
 
       // res.json({ resetURL });
       // send mail

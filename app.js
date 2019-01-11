@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Register api routes
-app.use('/api/v1', apiRoutes);
+app.use('/api', apiRoutes);
 
 // Registers handler for when routes are not found
 app.use(ErrorHandler.notFound);
