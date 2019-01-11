@@ -24,7 +24,6 @@ class PassportHandler {
    */
   static passportMiddleware() {
     const options = PassportHandler.getOptions();
-
     return passport.use(
       new Strategy(options, async (payload, done) => {
         const user = await User.findByPk(payload.user_id);
