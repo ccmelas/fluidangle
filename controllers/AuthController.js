@@ -1,4 +1,5 @@
-const { User } = require('../database/models');
+const jwt = require('jsonwebtoken');
+const { User, BlacklistedToken } = require('../database/models');
 /**
  * Handles authentication related functionality
  */
@@ -41,6 +42,27 @@ class AuthController {
    */
   static async authUser(req, res) {
     return res.json({ user: req.user.publicVersion() });
+  }
+
+  /**
+   * Logs out a user
+   * @param {object} req
+   * @param {object} res
+   * @returns {undefined | function } [Returns nothing or next]
+   */
+  static async logout(req, res) {
+    const token = req.header('Authorization').split(' ')[1];
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+
+    // put this payload in db blacklist
+    const blToken = await BlacklistedToken.create({
+      token,
+      expiry: payload.exp
+    });
+
+    global.blackListedTokens.push(blToken);
+
+    res.json({ message: 'User logged out successfully ' });
   }
 }
 

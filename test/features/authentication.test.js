@@ -4,7 +4,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 
 const app = require('../../index');
-const { User } = require('../../database/models');
+const { User, BlacklistedToken } = require('../../database/models');
 
 chai.use(chaiHttp);
 chai.should();
@@ -19,6 +19,7 @@ describe('Authentication', () => {
   beforeEach(async () => {
     // Before each test we empty the users table
     await User.destroy({ truncate: { cascade: true } });
+    await BlacklistedToken.destroy({ truncate: { cascade: true } });
   });
 
   /** test user registration */
@@ -118,6 +119,32 @@ describe('Authentication', () => {
             res.should.have.status(401);
             done();
           });
+      });
+    });
+  });
+
+  describe('GET /api/v1/logout', () => {
+    it('should logout a user', (done) => {
+      User.create(user).then((newUser) => {
+        const token = newUser.generateJWT();
+
+        const requester = chai.request(app).keepOpen();
+
+        const logoutRequest = requester.get('/api/v1/logout')
+          .set('Authorization', `Bearer ${token}`);
+
+        const authRouteRequest = requester.get('/api/v1/me')
+          .set('Authorization', `Bearer ${token}`);
+
+        logoutRequest.then((logoutResponse) => {
+          logoutResponse.should.have.status(200);
+          return authRouteRequest;
+        }).then((authResponse) => {
+          authResponse.should.have.status(401);
+        }).then(() => {
+          requester.close();
+          done();
+        });
       });
     });
   });
